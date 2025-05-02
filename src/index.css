@@ -1,3 +1,44 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+.app {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+
+.thought-form {
+  background: #f9f6f6;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.thought-form textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.thought-form button {
+  margin-top: 10px;
+  padding: 10px;
+  background: pink;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.thought-card {
+  background: white;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 4px 4px black;
+  border-radius: 10px;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  color: gray;
+  font-size: 0.9rem;
 }
