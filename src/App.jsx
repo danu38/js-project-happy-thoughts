@@ -19,9 +19,9 @@ function App() {
 
   return (
     <div className="app">
-      <ThoughtForm onNewThought={addThought} />
+      <MainForm onNewThought={addThought} />
       {thoughts.map((thought) => (
-        <ThoughtCard key={thought.id} message={thought.message} time={thought.time} />
+        <DisplayCard key={thought.id} message={thought.message} time={thought.time} />
       ))}
     </div>
   );

@@ -4,26 +4,47 @@ import { useState } from "react";
 const MainForm = ({ onNewThought }) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const maxLength = 140;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const trimmed = message.trim();
 
 
-   if (trimmed.length < 5) {
-      setError("Your message is too short! Minimum is 5 characters.");
+    if (trimmed.length < 5 || trimmed.length > maxLength) {
+      setError("Message must be between 5 and 140 characters.");
       return;
     }
 
-    if (trimmed.length > maxLength) {
-      setError("Your message is too long! Maximum is 140 characters.");
-      return;
-    }
+    setIsSubmitting(true);
     setError(""); // Clear previous errors
-    onNewThought(trimmed);
-    setMessage("");
+    try {
+      const response = await fetch("https://happy-thoughts-ux7hkzgmwa-uc.a.run.app/thoughts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: trimmed }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.errors?.message?.message || "Something went wrong. Please try again.");
+        return;
+      }
+
+      // Clear form and pass new thought to parent
+      setMessage("");
+      onNewThought(data);
+    } catch (err) {
+      setError("Network error. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -52,7 +73,9 @@ const MainForm = ({ onNewThought }) => {
       {error && <div className="error-message">{error}</div>}
 
       <div>
-        <button type="submit">❤️ Send Happy Thought ❤️</button>
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Sending..." : "❤️ Send Happy Thought ❤️"}
+        </button>
       </div>
     </form>
   );
