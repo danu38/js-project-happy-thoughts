@@ -1,8 +1,8 @@
-
 .app {
   max-width: 600px;
   margin: auto;
   padding: 20px;
+
 }
 
 .thought-form {
@@ -41,4 +41,21 @@
   justify-content: space-between;
   color: gray;
   font-size: 0.9rem;
+}
+
+.char-count {
+  font-size: 0.85rem;
+  margin-top: 4px;
+  text-align: right;
+  color: gray;
+}
+
+.char-count.error {
+  color: red;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin: 8px 0;
 }
