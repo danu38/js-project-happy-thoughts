@@ -46,6 +46,7 @@ const MainForm = ({ onNewThought }) => {
       setMessage("");
       onNewThought(data);
     } catch (error) {
+      console.error("Error submitting thought:", error);
       setError("Network error. Please try again later.");
     } finally {
       setIsSubmitting(false);

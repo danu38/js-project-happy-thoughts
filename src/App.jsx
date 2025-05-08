@@ -16,7 +16,7 @@ function App() {
         const response = await fetch(
           "https://happy-thoughts-ux7hkzgmwa-uc.a.run.app/thoughts"
         );
-        const data = await response.json();  // array of thoughts
+        const data = await response.json(); // array of thoughts
         setTimeout(() => {
           setThoughts(data);
           setLoading(false);
@@ -24,9 +24,10 @@ function App() {
 
         //setThoughts(data); // API returns most recent first
       } catch (error) {
+        console.error("Fetch error:", error);
         setError("Could not load thoughts. Try again later.");
       } finally {
-        setLoading(false);
+        setLoading(false); // setLoading flase since if error occurs i still needs to stoåp the loading spinner
       }
     };
 
@@ -37,6 +38,16 @@ function App() {
   const addThought = (newThought) => {
     // Add to top of list
     setThoughts((prev) => [newThought, ...prev]);
+  };
+
+  const handleHeart = (id) => {
+    setThoughts((prevThoughts) =>
+      prevThoughts.map((thought) =>
+        thought._id === id
+          ? { ...thought, hearts: thought.hearts + 1 }
+          : thought
+      )
+    );
   };
 
   return (
@@ -52,9 +63,12 @@ function App() {
 
       {thoughts.map((thought) => (
         <DisplayCard
-          key={thought.id}
+          key={thought._id}
+          id={thought._id}
           message={thought.message}
           time={new Date(thought.createdAt).toLocaleString()}
+          hearts={thought.hearts}
+          onHeart={handleHeart}
         />
       ))}
     </div>
