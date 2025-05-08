@@ -13,7 +13,6 @@ const MainForm = ({ onNewThought }) => {
 
     const trimmed = message.trim();
 
-
     if (trimmed.length < 5 || trimmed.length > maxLength) {
       setError("Message must be between 5 and 140 characters.");
       return;
@@ -22,25 +21,31 @@ const MainForm = ({ onNewThought }) => {
     setIsSubmitting(true);
     setError(""); // Clear previous errors
     try {
-      const response = await fetch("https://happy-thoughts-ux7hkzgmwa-uc.a.run.app/thoughts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message: trimmed }),
-      });
+      const response = await fetch(
+        "https://happy-thoughts-ux7hkzgmwa-uc.a.run.app/thoughts",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: trimmed }),
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.errors?.message?.message || "Something went wrong. Please try again.");
+        setError(
+          data.errors?.message?.message ||
+            "Something went wrong. Please try again."
+        );
         return;
       }
 
       // Clear form and pass new thought to parent
       setMessage("");
       onNewThought(data);
-    } catch (err) {
+    } catch (error) {
       setError("Network error. Please try again later.");
     } finally {
       setIsSubmitting(false);
@@ -66,9 +71,7 @@ const MainForm = ({ onNewThought }) => {
         placeholder="React is making me happy!"
       />
 
-<div className={remainingClass}>
-        {remaining} characters remaining
-      </div>
+      <div className={remainingClass}>{remaining} characters remaining</div>
 
       {error && <div className="error-message">{error}</div>}
 

@@ -1,27 +1,61 @@
-
-import { useState } from "react";
-
-import ThoughtForm from "./components/MainForm";
-import ThoughtCard from "./components/DisplayCard";
+import { useState, useEffect } from "react";
+import MainForm from "./components/MainForm";
+import DisplayCard from "./components/DisplayCard";
 import "./index.css";
 
 function App() {
   const [thoughts, setThoughts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const addThought = (message) => {
-    const newThought = {
-      id: Date.now(),
-      message,
-      time: "Just now",
+  // 1 Fetch thoughts from API on mount
+  useEffect(() => {
+    const fetchThoughts = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          "https://happy-thoughts-ux7hkzgmwa-uc.a.run.app/thoughts"
+        );
+        const data = await response.json();  // array of thoughts
+        setTimeout(() => {
+          setThoughts(data);
+          setLoading(false);
+        }, 1500); // 1.5 seconds , set the loading time to see the loading spinner
+
+        //setThoughts(data); // API returns most recent first
+      } catch (error) {
+        setError("Could not load thoughts. Try again later.");
+      } finally {
+        setLoading(false);
+      }
     };
-    setThoughts([newThought, ...thoughts]);
+
+    fetchThoughts();
+  }, []);
+
+  // 2️.Add new thought (called from MainForm)
+  const addThought = (newThought) => {
+    // Add to top of list
+    setThoughts((prev) => [newThought, ...prev]);
   };
 
   return (
     <div className="app">
       <MainForm onNewThought={addThought} />
+
+      {loading && (
+        <div className="loading">
+          <p>⏳ Loading happy thoughts...</p>
+        </div>
+      )}
+      {error && <p className="error-message">{error}</p>}
+
       {thoughts.map((thought) => (
-        <DisplayCard key={thought.id} message={thought.message} time={thought.time} />
+        <DisplayCard
+          key={thought.id}
+          message={thought.message}
+          time={new Date(thought.createdAt).toLocaleString()}
+        />
       ))}
     </div>
   );
