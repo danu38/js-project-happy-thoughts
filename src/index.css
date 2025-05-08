@@ -7,13 +7,14 @@
 
 .thought-form {
   background: #f9f6f6;
-  padding: 20px;
+  padding: 40px;
   border-radius: 10px;
   margin-bottom: 20px;
+  align-items: center;
 }
 
 .thought-form textarea {
-  width: 100%;
+  width: 95%;
   padding: 10px;
   font-size: 1rem;
   margin-top: 10px;
