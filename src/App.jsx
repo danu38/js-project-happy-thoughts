@@ -3,7 +3,7 @@ import MainForm from "./components/MainForm";
 import DisplayCard from "./components/DisplayCard";
 import "./index.css";
 
-function App() {
+export const App = () => {
   const [thoughts, setThoughts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
