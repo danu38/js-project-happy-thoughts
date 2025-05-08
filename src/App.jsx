@@ -8,6 +8,13 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [likedPostIds, setLikedPostIds] = useState(() => {
+    const stored = localStorage.getItem("likedPostIds");
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  const likeCount = likedPostIds.length;
+
   // 1 Fetch thoughts from API on mount
   useEffect(() => {
     const fetchThoughts = async () => {
@@ -48,11 +55,27 @@ function App() {
           : thought
       )
     );
+    setLikedPostIds((prev) => {
+      if (prev.includes(id)) return prev;
+      const updated = [...prev, id];
+      localStorage.setItem("likedPostIds", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const resetLikes = () => {
+    setLikedPostIds([]);
+    localStorage.removeItem("likedPostIds");
   };
 
   return (
     <div className="app">
       <MainForm onNewThought={addThought} />
+
+      <p className="like-counter">
+        💖 You’ve liked <strong>{likeCount}</strong> different happy thoughts
+      </p>
+      <button onClick={resetLikes}>⟳ Reset Like Count</button>
 
       {loading && (
         <div className="loading">
