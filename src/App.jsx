@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import MainForm from "./components/MainForm";
 import DisplayCard from "./components/DisplayCard";
+import { formatDistanceToNow } from "date-fns";
 import "./index.css";
 
 export const App = () => {
   const [thoughts, setThoughts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [likedPostIds, setLikedPostIds] = useState(() => {
     const stored = localStorage.getItem("likedPostIds");
     return stored ? JSON.parse(stored) : [];
@@ -89,7 +89,7 @@ export const App = () => {
           key={thought._id}
           id={thought._id}
           message={thought.message}
-          time={new Date(thought.createdAt).toLocaleString()}
+          time={formatDistanceToNow(new Date(thought.createdAt), { addSuffix: true })}
           hearts={thought.hearts}
           onHeart={handleHeart}
         />
