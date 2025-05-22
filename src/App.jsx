@@ -75,7 +75,7 @@ export const App = () => {
       <p className="like-counter">
         💖 You’ve liked <strong>{likeCount}</strong> different happy thoughts
       </p>
-      <button onClick={resetLikes}>⟳ Reset Like Count</button>
+      <button  className="thought-form" onClick={resetLikes}>🍥 Reset Like Count</button>
 
       {loading && (
         <div className="loading">

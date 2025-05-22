@@ -5,6 +5,15 @@
 
 }
 
+.app button {
+  margin-top: 10px;
+  padding: 10px;
+  background: pink;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
 .thought-form {
   background: #f9f6f6;
   padding: 40px;

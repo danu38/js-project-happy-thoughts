@@ -6,28 +6,26 @@ const MainForm = ({ onNewThought }) => {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const maxLength = 140;
+  const MAX_LENGTH = 140;
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
-
     const trimmed = message.trim();
 
-    if (trimmed.length < 5 || trimmed.length > maxLength) {
+    if (trimmed.length < 5 || trimmed.length > MAX_LENGTH) {
       setError("Message must be between 5 and 140 characters.");
       return;
     }
 
     setIsSubmitting(true);
     setError(""); // Clear previous errors
+
     try {
       const response = await fetch(
         "https://happy-thoughts-ux7hkzgmwa-uc.a.run.app/thoughts",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: {"Content-Type": "application/json" },
           body: JSON.stringify({ message: trimmed }),
         }
       );
@@ -36,9 +34,7 @@ const MainForm = ({ onNewThought }) => {
 
       if (!response.ok) {
         setError(
-          data.errors?.message?.message ||
-            "Something went wrong. Please try again."
-        );
+          data.errors?.message?.message || "Something went wrong. Please try again" );
         return;
       }
 
@@ -58,7 +54,7 @@ const MainForm = ({ onNewThought }) => {
     if (error) setError(""); // Clear error on new input
   };
 
-  const remaining = maxLength - message.length;
+  const remaining = MAX_LENGTH - message.length;
   const remainingClass = remaining < 0 ? "char-count error" : "char-count";
 
   return (
