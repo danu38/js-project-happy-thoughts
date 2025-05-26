@@ -45,6 +45,30 @@ const HeartButton = styled.button`
   width: 28px;
   height: 28px;
   color: #be2835; /* Heart color */
+
+
+    display: flex; /* center the content */
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+`;
+
+const CardFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;flex-direction: row;
+`;
+
+const HeartGroup = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 4px; /* space between heart and count */
+`;
+
+const HeartCount = styled.span`
+  font-size: 1rem;
+  line-height: 1;padding-top: 12px;color: #7e7575; /* Heart count color */
 `;
 
 const DisplayCard = ({ id, message, time, hearts, onHeart }) => {
@@ -76,15 +100,17 @@ const DisplayCard = ({ id, message, time, hearts, onHeart }) => {
         <TextOverflow>{message}</TextOverflow>
       </MessageWrapper>
 
-      <div className="card-footer">
-        <span>
+      <CardFooter>
+        <HeartGroup>
+        
           <HeartButton onClick={handleLike} disabled={isLiking}>
             ❤️
           </HeartButton>{" "}
-          *{hearts}
-        </span>
+         <HeartCount>*{hearts}</HeartCount>
+        
+        </HeartGroup>
         <span>{time}</span>
-      </div>
+      </CardFooter>
     </ThoughtCard>
   );
 };
