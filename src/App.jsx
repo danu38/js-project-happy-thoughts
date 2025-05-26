@@ -21,7 +21,7 @@ export const App = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          "https://happy-thoughts-ux7hkzgmwa-uc.a.run.app/thoughts"
+          "https://happy-thoughts-api-4ful.onrender.com/thoughts"
         );
         const data = await response.json(); // array of thoughts
         setTimeout(() => {
