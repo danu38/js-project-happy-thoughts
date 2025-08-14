@@ -24,7 +24,8 @@ export const App = () => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
- const [page, setPage] = useState("login"); // "login", "register", "thoughts"
+ 
+  const [page, setPage] = useState(user ? "thoughts" : "login");// "login", "register", "thoughts"
   // Handle successful login
   const handleLogin = (userData) => {
     setUser(userData);
@@ -93,7 +94,7 @@ export const App = () => {
     localStorage.removeItem("likedPostIds");
   };
 
-  // Page routing logic
+  // Page routing
   if (page === "login") {
     return <Login onLogin={handleLogin} onSwitchToRegister={() => setPage("register")} />;
   }
@@ -101,7 +102,6 @@ export const App = () => {
   if (page === "register") {
     return <Register onRegisterSuccess={() => setPage("login")} onSwitchToLogin={() => setPage("login")} />;
   }
-
 
     return (
     <div className="app">
