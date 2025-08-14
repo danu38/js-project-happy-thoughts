@@ -8,7 +8,7 @@ const MainForm = ({ onNewThought }) => {
 
   const MAX_LENGTH = 140;
 
- const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const trimmed = message.trim();
 
@@ -17,15 +17,23 @@ const MainForm = ({ onNewThought }) => {
       return;
     }
 
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      setError("You must be logged in to post a thought.");
+      return;
+    }
     setIsSubmitting(true);
     setError(""); // Clear previous errors
 
     try {
       const response = await fetch(
-        "https://happy-thoughts-api-4ful.onrender.com/thoughts",
+        "https://js-project-api-zqp9.onrender.com/thoughts",
         {
           method: "POST",
-          headers: {"Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
           body: JSON.stringify({ message: trimmed }),
         }
       );
@@ -34,7 +42,9 @@ const MainForm = ({ onNewThought }) => {
 
       if (!response.ok) {
         setError(
-          data.errors?.message?.message || "Something went wrong. Please try again" );
+          data.errors?.message?.message ||
+            "Something went wrong. Please try again"
+        );
         return;
       }
 

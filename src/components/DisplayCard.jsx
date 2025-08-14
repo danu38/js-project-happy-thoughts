@@ -79,7 +79,7 @@ const DisplayCard = ({ id, message, time, hearts, onHeart }) => {
     setIsLiking(true);
     try {
       await fetch(
-        `https://happy-thoughts-api-4ful.onrender.com/thoughts/${id}/like`,
+        `https://js-project-api-zqp9.onrender.com/thoughts/${id}/like`,
         { method: "POST" }
       );
       onHeart(id); // Tell App to update UI

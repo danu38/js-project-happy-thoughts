@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
 import MainForm from "./components/MainForm";
 import DisplayCard from "./components/DisplayCard";
+import Register from "./components/Register";
+import Login from "./components/Login"; 
 import { formatDistanceToNow } from "date-fns";
 import "./index.css";
+
+
+
 
 export const App = () => {
   const [thoughts, setThoughts] = useState([]);
@@ -13,21 +19,40 @@ export const App = () => {
     return stored ? JSON.parse(stored) : [];
   });
 
+   const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+ const [page, setPage] = useState("login"); // "login", "register", "thoughts"
+  // Handle successful login
+  const handleLogin = (userData) => {
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+    setPage("thoughts");
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+    setPage("login");
+  };
+
+
   const likeCount = likedPostIds.length;
 
   // 1 Fetch thoughts from API on mount
   useEffect(() => {
+      if (page !== "thoughts") return; // Only fetch when on thoughts page
     const fetchThoughts = async () => {
       setLoading(true);
       try {
         const response = await fetch(
-          "https://happy-thoughts-api-4ful.onrender.com/thoughts"
+          "https://js-project-api-zqp9.onrender.com/thoughts"
         );
         const data = await response.json(); // array of thoughts
-        setTimeout(() => {
-          setThoughts(data);
-          setLoading(false);
-        }, 1500); // 1.5 seconds , set the loading time to see the loading spinner
+       setThoughts(data);
 
         //setThoughts(data); // API returns most recent first
       } catch (error) {
@@ -39,7 +64,7 @@ export const App = () => {
     };
 
     fetchThoughts();
-  }, []);
+  }, [page]);
 
   // 2️.Add new thought (called from MainForm)
   const addThought = (newThought) => {
@@ -68,20 +93,38 @@ export const App = () => {
     localStorage.removeItem("likedPostIds");
   };
 
-  return (
+  // Page routing logic
+  if (page === "login") {
+    return <Login onLogin={handleLogin} onSwitchToRegister={() => setPage("register")} />;
+  }
+
+  if (page === "register") {
+    return <Register onRegisterSuccess={() => setPage("login")} onSwitchToLogin={() => setPage("login")} />;
+  }
+
+
+    return (
     <div className="app">
-      <MainForm onNewThought={addThought} />
+      <header>
+        <h1>Happy Thoughts</h1>
+        {user && (
+          <div>
+            <span>Logged in as {user.username}</span>
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        )}
+      </header>
+
+      <MainForm onNewThought={addThought} user={user} />
 
       <p className="like-counter">
         💖 You’ve liked <strong>{likeCount}</strong> different happy thoughts
       </p>
-      <button  className="thought-form" onClick={resetLikes}>🍥 Reset Like Count</button>
+      <button className="thought-form" onClick={resetLikes}>
+        🍥 Reset Like Count
+      </button>
 
-      {loading && (
-        <div className="loading">
-          <p>⏳ Loading happy thoughts...</p>
-        </div>
-      )}
+      {loading && <div className="loading"><p>⏳ Loading happy thoughts...</p></div>}
       {error && <p className="error-message">{error}</p>}
 
       {thoughts.map((thought) => (
@@ -96,6 +139,6 @@ export const App = () => {
       ))}
     </div>
   );
-}
+};
 
 export default App;
