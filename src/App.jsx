@@ -19,13 +19,23 @@ export const App = () => {
     return stored ? JSON.parse(stored) : [];
   });
 
-   const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
-
+ const [user, setUser] = useState(null);
+const [authLoading, setAuthLoading] = useState(true); // new state to avoid flicker
  
   const [page, setPage] = useState(user ? "thoughts" : "login");// "login", "register", "thoughts"
+
+ // Load user from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setPage("thoughts");
+    }
+    setAuthLoading(false); // done checking localStorage
+  }, []);
+
+
   // Handle successful login
   const handleLogin = (userData) => {
     setUser(userData);
@@ -94,7 +104,12 @@ export const App = () => {
     localStorage.removeItem("likedPostIds");
   };
 
-  // Page routing
+
+  // Don't render until we know if user is logged in
+  if (authLoading) {
+    return <div>Loading...</div>;
+  }
+
   if (page === "login") {
     return <Login onLogin={handleLogin} onSwitchToRegister={() => setPage("register")} />;
   }
@@ -102,7 +117,6 @@ export const App = () => {
   if (page === "register") {
     return <Register onRegisterSuccess={() => setPage("login")} onSwitchToLogin={() => setPage("login")} />;
   }
-
     return (
     <div className="app">
       <header>
