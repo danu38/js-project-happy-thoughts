@@ -27,7 +27,7 @@ export default function Register({ onRegisterSuccess, onSwitchToLogin }) {
         onRegisterSuccess(); // switch to login page
       }
     } catch (err) {
-      setError("Network error. Please try again.", err);
+      error("An error occurred. Please try again.",err);
     } finally {
       setIsLoading(false);
     }
